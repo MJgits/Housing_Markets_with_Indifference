@@ -17,9 +17,9 @@ use crate::graph::ObjectAvailability;
 
 
 pub struct Agent {
-    id: i32,
-    preferences: Vec<HashSet<i32>>,
-    endowment_id: i32
+    pub id: i32,
+    pub preferences: Vec<HashSet<i32>>,
+    pub endowment_id: i32
 }
 
 
@@ -32,7 +32,6 @@ struct Object {
 
 // need some O(1) check of object availability or some top(A) function
 impl Agent {
-
 
     // This function should 
     pub fn top_available_obj(&self, available_items: &ObjectAvailability) -> HashSet<i32> {

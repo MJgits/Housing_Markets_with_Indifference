@@ -5,13 +5,17 @@ use crate::graph::{IndifferenceMarket, Allocation,ObjectAvailability};
 
 impl IndifferenceMarket {
     fn execute_ttc_arb_tie_break(&self) -> Allocation {
+
+
         // initialise all objects available
             // can this happen during running through preferences like and or insert i32, true?
         let mut available_items = ObjectAvailability {
             availability: HashMap::new()
         };
 
-        for agent in self.agents
+        for agent in &self.agents {
+            available_items.add_object(agent.endowment_id.clone());
+        }
         // initialise empty allocation
         // until no agent remains:
         //     agent i

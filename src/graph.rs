@@ -10,6 +10,8 @@ add and remove edges
 
 look for sources and sinks
 
+
+Need some reverse look up for object Id : owner 
 */
 
 use std::collections::HashMap;
@@ -20,7 +22,7 @@ pub struct IndifferenceMarket {
 }
 
 
-
+// TODO need to figure out whether all this stuff relies on i32 ids or actual object structures (a copy of the object)
 impl IndifferenceMarket {
     pub fn is_valid_market(&self) -> bool {
         todo!()
@@ -42,7 +44,23 @@ pub struct ObjectAvailability {
     pub availability: HashMap<i32, bool>
 }
 
+impl ObjectAvailability {
+
+    pub fn add_object(&self, o: i32) {
+        // should be an add or insert situation
+        todo!()
+    }
+
+    pub fn set_availability (&self, o: i32, a: bool) {
+        todo!()
+    }
+    pub fn get_availability() {
+        todo!()
+    }
+}
+
 
 pub struct Allocation {
     pub allocation: HashMap<i32,i32>
 }
+
