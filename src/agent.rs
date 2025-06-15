@@ -51,6 +51,10 @@ impl Agent {
         }
         top_available
     }
+    // an agent is satisfied if it owns an object from its top available preferences
+    pub fn is_satisfied(&self, available_items: &ObjectAvailability) -> bool {
+        self.top_available_obj(available_items).contains(&self.endowment_id)
+    }
 }
 
 

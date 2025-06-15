@@ -54,8 +54,9 @@ impl ObjectAvailability {
     pub fn set_availability (&self, o: i32, a: bool) {
         todo!()
     }
-    pub fn get_availability() {
-        todo!()
+
+    pub fn get_availability(&self, o_id:i32) -> bool {
+        *self.availability.get(&o_id).unwrap()
     }
 }
 
