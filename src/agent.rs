@@ -10,19 +10,20 @@ also needs to have labels and maybe group status depending on algo
 agents probably look different depending on algorithm, so agent should potentially be a trait and then we make impls for each type of agent for important functions so they can be called together
 */
 
-use std::collections::{hash_set, HashMap, HashSet};
+use std::collections::HashSet;
 use crate::graph::ObjectAvailability;
 
 
 
-
+#[derive(Clone)]
 pub struct Agent {
     pub id: i32,
     pub preferences: Vec<HashSet<i32>>,
+    // endownments maybe should be stored outside of the agent struct?
     pub endowment_id: i32
 }
 
-
+//  should maybe get put into the indifference market structure...
 struct Object {
     id: i32,
     owner_id: i32,
@@ -31,8 +32,14 @@ struct Object {
 
 
 // need some O(1) check of object availability or some top(A) function
-impl Agent {
 
+impl Agent {
+    pub fn new(id: i32, preferences: Vec<HashSet<i32>>) -> Self {
+        Agent { 
+            id: id, 
+            preferences: preferences, 
+            endowment_id: id }
+    }
     // This function should 
     pub fn top_available_obj(&self, available_items: &ObjectAvailability) -> HashSet<i32> {
 
