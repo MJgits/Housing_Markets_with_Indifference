@@ -48,7 +48,7 @@ fn xiong_agents()-> Vec<Agent> {
         endowment_id: 6,
     };
 
-    vec![agent1,agent2,agent3,agent4,agent5,agent6]
+    vec!([agent1,agent2,agent3,agent4,agent5,agent6])
 
 }
 

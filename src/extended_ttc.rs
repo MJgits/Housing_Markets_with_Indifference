@@ -1,5 +1,5 @@
 use std::{collections::{HashMap, HashSet}, os::unix::net::UnixStream};
-use crate::graph::{AgentId, Allocation, IndifferenceMarket, ObjectAvailability};
+use crate::graph::{AgentId, Allocation, IndifferenceMarket, Objects};
 
 impl IndifferenceMarket{
 
@@ -21,7 +21,7 @@ impl IndifferenceMarket{
 
 
             for agent in &agents_clone {
-                if agent.is_satisfied(&self.object_availability) {
+                if agent.is_satisfied(&self.objects) {
                     satisfied_set.insert(agent.id);
                 } else {
                     unsatisfied_set.insert(agent.id);
@@ -35,9 +35,6 @@ impl IndifferenceMarket{
             while !satisfied_set.is_empty() {
 
             }
-
-
-            
             
 
 

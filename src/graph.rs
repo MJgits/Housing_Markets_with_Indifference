@@ -42,8 +42,8 @@ macro_rules! preferences {
 
 // This should probably contain the allocations and object availabilities?
 pub struct IndifferenceMarket {
-    pub agents: Vec<Agent>,
-    pub object_availability: ObjectAvailability,
+    pub agents: HashSet<Agent>,
+    pub objects: Objects,
     pub allocation: HashMap<AgentId,ObjectId>
 }
 
@@ -51,11 +51,11 @@ pub struct IndifferenceMarket {
 // TODO need to figure out whether all this stuff relies on i32 ids or actual object structures (a copy of the object)
 impl IndifferenceMarket {
 
-    pub fn new(agent_vector: Vec<Agent>) -> Self {
+    pub fn new(agent_vector: HashSet<Agent>) -> Self {
 
         let mut market = IndifferenceMarket {
             agents: agent_vector,
-            object_availability: ObjectAvailability { availability: HashMap::new() } ,
+            objects: Objects {availability: HashMap::new(), owner_lookup: HashMap::new()} ,
             allocation: HashMap::new(),
         };
 
@@ -63,12 +63,15 @@ impl IndifferenceMarket {
         // initialise agents with their own objects and object availabilities
         for agent in &market.agents {
 
-            market.object_availability.add_object(agent.endowment_id);
+            market.objects.availability.insert(agent.endowment_id, true);
+            market.objects.owner_lookup.insert(agent.endowment_id, agent.id);
             // unwraps necessary to convert usize to ints
             market.allocation.insert(agent.id, agent.endowment_id);
         }
         market
     }
+
+    // The types part of this would be autohandled by rust but it would be like ensuring no invalid preference lists e.g. [{1,2}, {1}]
     pub fn is_valid_market(&self) -> bool {
         todo!()
     }
@@ -77,7 +80,7 @@ impl IndifferenceMarket {
         self.allocation.entry(a).insert_entry(o);
     }
 
-    pub fn remove_agent_and_allocated_object(&self, a:i32, availabilities: &ObjectAvailability) {
+    pub fn remove_agent_and_allocated_object(&self, a:i32, availabilities: &Objects) {
         todo!()
     }
 
@@ -87,31 +90,35 @@ impl IndifferenceMarket {
 // Should eventually progress this to having set and get methods instead of direct access to fields
 
 // serves as a reverse look up for 
-pub struct ObjectAvailability {
-    pub availability: HashMap<ObjectId, bool>
-    
+pub struct Objects {
+    pub availability: HashMap<ObjectId, bool>,
+    pub owner_lookup: HashMap<ObjectId, AgentId>
 }
 
-impl ObjectAvailability {
-    // is this even a necessary method?
-    pub fn add_object(&mut self, o: ObjectId) {
-        // should be an add or insert situation
-        self.availability.insert(o, true);
-    }
-
-    pub fn set_availability (&mut self, o: ObjectId, a: AgentId) {
-        todo!()
+impl Objects {
+    pub fn set_availability (&mut self, o: ObjectId, availability: bool) {
+        self.availability.insert(o, availability);
     }
 
     pub fn get_availability(&self, o:ObjectId) -> bool {
         *self.availability.get(&o).unwrap()
     }
+
+    pub fn set_owner_id (&mut self, o: ObjectId, a: AgentId) {
+        self.owner_lookup.insert(o, a);
+    }
+    // this will be the reverse look up function effectively where we can have an object and see its owner
+    pub fn get_owner_id(&self, o:ObjectId) -> AgentId {
+        *self.owner_lookup.get(&o).unwrap()
+    }
+    
 }
 
-
+// is this even a necessary structure
 pub struct Allocation {
     pub allocation: HashMap<AgentId,ObjectId>
 }
+
 
 impl Allocation {
     pub fn new(&self, length:usize) {

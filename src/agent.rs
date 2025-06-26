@@ -5,29 +5,23 @@ should include a nice way to access preferences high to low with indifference an
 
 also needs to have labels and maybe group status depending on algo
 
-
-
 agents probably look different depending on algorithm, so agent should potentially be a trait and then we make impls for each type of agent for important functions so they can be called together
 */
 
 use std::collections::HashSet;
-use crate::graph::ObjectAvailability;
+use crate::graph::Objects;
 
 
 
-#[derive(Clone)]
+#[derive(Clone,PartialEq, Eq, Hash)]
 pub struct Agent {
     pub id: i32,
+    #[derive(PartialEq, Eq, Hash)]
     pub preferences: Vec<HashSet<i32>>,
     // endownments maybe should be stored outside of the agent struct?
     pub endowment_id: i32
 }
 
-//  should maybe get put into the indifference market structure...
-struct Object {
-    id: i32,
-    owner_id: i32,
-}
 
 
 
@@ -41,7 +35,7 @@ impl Agent {
             endowment_id: id }
     }
     // This function should 
-    pub fn top_available_obj(&self, available_items: &ObjectAvailability) -> HashSet<i32> {
+    pub fn top_available_obj(&self, available_items: &Objects) -> HashSet<i32> {
 
         let mut top_available: HashSet<i32> = HashSet::new();
 
@@ -59,7 +53,7 @@ impl Agent {
         top_available
     }
     // an agent is satisfied if it owns an object from its top available preferences
-    pub fn is_satisfied(&self, available_items: &ObjectAvailability) -> bool {
+    pub fn is_satisfied(&self, available_items: &Objects) -> bool {
         self.top_available_obj(available_items).contains(&self.endowment_id)
     }
 }
@@ -68,6 +62,8 @@ impl Agent {
 #[cfg(test)]
 mod tests {
     
+    use crate::graph::Objects;
+
     use super::*;
 
     #[test]
@@ -82,8 +78,9 @@ mod tests {
             endowment_id: 0,
         };
 
-        let avails1 = ObjectAvailability{
-            availability: [(0, false), (1,true), (2,false), (3, true), (4, true)].into_iter().collect()
+        let avails1 = Objects{
+            availability: [(0, false), (1,true), (2,false), (3, true), (4, true)].into_iter().collect(),
+            owner_lookup: [(0, 0), (1,1), (2,2), (3, 3), (4, 4)].into_iter().collect(),
         };
 
         let top_avail = agent1.top_available_obj(&avails1);
